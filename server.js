@@ -51,7 +51,7 @@ function stream (query, connection, output, defaultContent, req) {
   var empty = true;
   request.on('row', function (columns) {
     empty = false;
-    console.log (columns);
+
     output.write(columns[0].value);
 	//output.send ( JSON.stringify(columns));
   });
@@ -129,7 +129,7 @@ app.put('/', function(req, resp){
 app.delete('/', function(req, resp){
   console.log (req.query);
   if (req.query.id) {
-    del_func(req.params.id);
+    del_func(req.query.id);
     output_success(req, resp);
   }
 });
@@ -208,7 +208,7 @@ add_func = function (body) {
 console.log ("add_func is called");
   var connection = createConnection();
   var request = createRequest("exec createTodo @todo", connection);
-  console.log (request);
+
   request.addParameter('todo', TYPES.NVarChar, body);
 
   connection.on('connect', function (err) {
@@ -224,7 +224,7 @@ del_func = function (id) {
 
   var connection = createConnection();
   var request = createRequest("delete from todo where id = @id", connection);
-  console.log (request);
+
   request.addParameter('id', TYPES.Int, id);
 
   connection.on('connect', function (err) {
@@ -241,7 +241,7 @@ get_func = function (id, res) {
   var conn = createConnection();
 
   var request = createRequest("select * from todo where id = @id for json path, without_array_wrapper", conn);
-  console.log (request);
+
   request.addParameter('id', TYPES.Int, id);
   stream(request, conn, res, '{}');
 };
@@ -251,14 +251,16 @@ update_func = function (id, body) {
 
   var connection = createConnection();
   var request = createRequest("exec updateTodo @id, @todo", connection);
-  console.log (request);
+
   request.addParameter('id', TYPES.Int, id);
   request.addParameter('todo', TYPES.NVarChar, body);
+  console.log (body);
 
   connection.on('connect', function (err) {
     if (err) {
       throw err;
     }
+    console.log (id);
     connection.execSql(request);
   });
 };
