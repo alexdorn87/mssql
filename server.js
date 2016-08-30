@@ -110,24 +110,25 @@ app.get('/', function(req, resp){
 });
 
 app.post('/', function(req, resp){
-  console.log (req.body);
-  if (req.body.body) {
-    add_func(req.body.body);
+  console.log (req.query);
+  console.log (req.query.body);
+  if (req.query.body) {
+    add_func(req.query.body);
     output_success(req, resp);
   }
 });
 
 app.put('/', function(req, resp){
-  console.log (req);
-  if (req.body.body && req.body.id) {
-    update_func(req.body.id, req.body.body);
+  console.log (req.query);
+  if (req.query.body && req.query.id) {
+    update_func(req.query.id, req.query.body);
     output_success(req, resp);
   }
 });
 
 app.delete('/', function(req, resp){
-  console.log (req);
-  if (req.body.body) {
+  console.log (req.query);
+  if (req.query.id) {
     del_func(req.params.id);
     output_success(req, resp);
   }
